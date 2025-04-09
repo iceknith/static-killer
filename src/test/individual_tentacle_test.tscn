@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bleher4vgfj5t"]
+
+[ext_resource type="Shader" uid="uid://bm1bx6bl6gek0" path="res://src/test/outline.gdshader" id="1_7jqnf"]
+[ext_resource type="Script" uid="uid://dj3a65ule8jr3" path="res://src/test/individual_tentacle_test.gd" id="2_w7ocn"]
+[ext_resource type="Texture2D" uid="uid://b0n1jxlfpenv" path="res://assets/images/test/Skull_test.png" id="3_qlatq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6lo51"]
+shader = ExtResource("1_7jqnf")
+shader_parameter/line_color = Color(1, 1, 1, 1)
+shader_parameter/line_thickness = 0.1
+shader_parameter/x_cap = 0.3
+shader_parameter/x_acceleration = 0.5
+shader_parameter/reversed = false
+
+[sub_resource type="Curve" id="Curve_6mxbs"]
+_data = [Vector2(0, 1), 0.0544579, 0.0544579, 0, 0, Vector2(0.232804, 0.866393), -1.1404, -1.1404, 0, 0, Vector2(0.330688, 0.926516), 0.0, 0.0, 0, 0, Vector2(0.457672, 0.752826), 0.0, 0.0, 0, 0, Vector2(1, 0.0836713), 0.0, 0.90609, 0, 0]
+point_count = 5
+
+[node name="IndividualTentacleTest" type="Line2D"]
+texture_repeat = 3
+material = SubResource("ShaderMaterial_6lo51")
+width = 15.0
+width_curve = SubResource("Curve_6mxbs")
+default_color = Color(0, 0, 0, 1)
+texture_mode = 2
+joint_mode = 2
+end_cap_mode = 2
+script = ExtResource("2_w7ocn")
+tentacle_wave_speed = 2.0
+tentacle_wave_amplitude = 2.5
+tentacle_wave_frequency = 35.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+z_index = -1
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_qlatq")

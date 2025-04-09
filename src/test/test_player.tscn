@@ -1,0 +1,59 @@
+[gd_scene load_steps=10 format=3 uid="uid://cr6tokb1rig0d"]
+
+[ext_resource type="Script" uid="uid://b2rglbjaoxdbj" path="res://src/test/test_player.gd" id="1_1op1a"]
+[ext_resource type="PackedScene" uid="uid://bhcpfx70mpdjo" path="res://src/test/tentacle_test.tscn" id="1_5bwgy"]
+[ext_resource type="Texture2D" uid="uid://b0n1jxlfpenv" path="res://assets/images/test/Skull_test.png" id="1_n60f6"]
+[ext_resource type="Shader" uid="uid://dfpns7ib27p1x" path="res://src/test/tentacle_shader.gdshader" id="4_o4515"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1op1a"]
+radius = 21.0
+height = 62.0
+
+[sub_resource type="Curve" id="Curve_o4515"]
+_data = [Vector2(0, 1), -0.820326, -0.0463411, 0, 0, Vector2(0.3275, 0.699711), 0.0, 0.0, 0, 0, Vector2(0.6625, 0.255534), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_3xs22"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.255, 1), 0.0, 0.0, 0, 0, Vector2(0.6175, 0.856112), 0.0, 0.0, 0, 0, Vector2(0.8775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="CurveTexture" id="CurveTexture_5auc6"]
+curve = SubResource("Curve_3xs22")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o4515"]
+shader = ExtResource("4_o4515")
+shader_parameter/inverted = false
+shader_parameter/outline_size = 0.15
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/speed = 2.0
+shader_parameter/amplitude_curve_texture = SubResource("CurveTexture_5auc6")
+shader_parameter/amplitude = 4.0
+shader_parameter/period = 10.0
+
+[node name="TestPlayer" type="Node2D"]
+script = ExtResource("1_1op1a")
+anchor_position = Vector2(500, 250)
+
+[node name="head" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="head"]
+shape = SubResource("CapsuleShape2D_1op1a")
+disabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="head"]
+texture = ExtResource("1_n60f6")
+
+[node name="tentacle1" parent="." instance=ExtResource("1_5bwgy")]
+width_curve = SubResource("Curve_o4515")
+max_distance = 50.0
+number_of_points = 5
+max_speed = 300.0
+inverted = true
+debug_display = true
+
+[node name="tentacle2" parent="." instance=ExtResource("1_5bwgy")]
+material = SubResource("ShaderMaterial_o4515")
+max_distance = 50.0
+number_of_points = 5
+max_speed = 300.0
+debug_display = true

@@ -1,0 +1,27 @@
+- Caisse
+	- Objet simple
+	- Hitbox mobile
+	- Crush joueur si tombe dessus
+
+- Static beacon
+	-repousse la zone proche et attire la zone opposée 
+	-Force l'opposant à s'approcher tout en créant une safe place
+- Vial
+	- Régénère 1 stamina
+	- simple et basique permet de gagner par avantage de stam
+- Télé
+	- Téléporte?
+	- attaque à distance?
+	- un truc?
+- Gun
+	-gun
+	-must allow Gunning
+	-be counterable
+- IEM
+	- Stun / Instakill
+	- activation puis explosion app x sec
+-Chapeau
+ 	- Ne fait rien en lui même
+	- offre un point bonus si le joueur gagne
+
+

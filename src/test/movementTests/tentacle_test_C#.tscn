@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bhcpfx70mpdjo"]
+[gd_scene load_steps=7 format=3 uid="uid://cgxx41idtyobr"]
 
-[ext_resource type="Shader" uid="uid://dfpns7ib27p1x" path="res://src/test/tentacle_shader.gdshader" id="1_rbsui"]
-[ext_resource type="Curve" uid="uid://nuu08a1gtw2k" path="res://src/test/tentacle_curve.tres" id="2_cmf4k"]
-[ext_resource type="Script" uid="uid://cmdw5no4pcqm4" path="res://src/test/tentacle_test.gd" id="2_rbsui"]
+[ext_resource type="Shader" uid="uid://dfpns7ib27p1x" path="res://src/test/movementTests/tentacle_shader.gdshader" id="1_wixjy"]
+[ext_resource type="Curve" uid="uid://nuu08a1gtw2k" path="res://src/test/movementTests/tentacle_curve.tres" id="2_krny1"]
+[ext_resource type="Script" uid="uid://bgl5bmhijygad" path="res://src/test/movementTests/TentacleTestCS.cs" id="3_wixjy"]
 
 [sub_resource type="Curve" id="Curve_3xs22"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.255, 1), 0.0, 0.0, 0, 0, Vector2(0.6175, 0.856112), 0.0, 0.0, 0, 0, Vector2(0.8775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -12,7 +12,7 @@ point_count = 5
 curve = SubResource("Curve_3xs22")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6lo51"]
-shader = ExtResource("1_rbsui")
+shader = ExtResource("1_wixjy")
 shader_parameter/inverted = false
 shader_parameter/outline_size = 0.25
 shader_parameter/outline_color = Color(1, 1, 1, 1)
@@ -25,8 +25,8 @@ shader_parameter/period = 10.0
 texture_repeat = 3
 material = SubResource("ShaderMaterial_6lo51")
 width = 15.0
-width_curve = ExtResource("2_cmf4k")
+width_curve = ExtResource("2_krny1")
 default_color = Color(0, 0, 0, 1)
 texture_mode = 2
-script = ExtResource("2_rbsui")
-max_distance = 5.0
+script = ExtResource("3_wixjy")
+anchorPosition = Vector2(400, 300)

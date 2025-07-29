@@ -14,7 +14,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if ($tentacle1.points.is_empty() || $tentacle2.points.is_empty()): return
 	
-	# Forward
+	# Forward	
 	var movement = Vector2(Input.get_axis("left1", "right1"), Input.get_axis("up1", "down1")).normalized()
 	$tentacle2.goal_point = movement * $tentacle2.max_speed * delta + $tentacle2.points[-1]
 	$tentacle2.distance_chain_forward_movement(delta)

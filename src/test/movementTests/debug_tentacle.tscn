@@ -1,26 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://cswv44wbs17c7"]
+[gd_scene load_steps=4 format=3 uid="uid://gd0o2fjf3kyn"]
 
-[ext_resource type="PackedScene" uid="uid://cr6tokb1rig0d" path="res://src/test/test_player.tscn" id="1_efgit"]
+[ext_resource type="Script" uid="uid://cd6c24oevnueb" path="res://src/test/movementTests/debug_tentacle.gd" id="1_k3ao6"]
+[ext_resource type="PackedScene" uid="uid://cgxx41idtyobr" path="res://src/test/movementTests/tentacle_test_C#.tscn" id="2_k3ao6"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_efgit"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k3ao6"]
 size = Vector2(123.5, 83)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_j20h5"]
-size = Vector2(123.5, 83)
-
-[node name="TestScene" type="Node2D"]
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
-offset_left = 252.0
-offset_top = 113.0
-offset_right = 375.0
-offset_bottom = 196.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(313.25, 154.5)
-shape = SubResource("RectangleShape2D_efgit")
+[node name="debug_tentacle" type="Node2D"]
+script = ExtResource("1_k3ao6")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="."]
 
@@ -29,10 +16,12 @@ offset_left = 508.0
 offset_top = 105.0
 offset_right = 631.0
 offset_bottom = 188.0
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 position = Vector2(570, 146)
-shape = SubResource("RectangleShape2D_efgit")
+shape = SubResource("RectangleShape2D_k3ao6")
+metadata/_edit_lock_ = true
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="."]
 
@@ -41,15 +30,15 @@ offset_left = 697.0
 offset_top = 336.0
 offset_right = 820.0
 offset_bottom = 419.0
+metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
 position = Vector2(758, 378)
-shape = SubResource("RectangleShape2D_efgit")
-
-[node name="TestPlayer" parent="." instance=ExtResource("1_efgit")]
+shape = SubResource("RectangleShape2D_k3ao6")
+metadata/_edit_lock_ = true
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="."]
-position = Vector2(-278, -57)
+position = Vector2(-321, -140)
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D4"]
 offset_left = 697.0
@@ -60,11 +49,11 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D4"]
 position = Vector2(758, 378)
-shape = SubResource("RectangleShape2D_j20h5")
+shape = SubResource("RectangleShape2D_k3ao6")
 metadata/_edit_lock_ = true
 
 [node name="StaticBody2D7" type="StaticBody2D" parent="."]
-position = Vector2(-179, 83)
+position = Vector2(-218, 50)
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D7"]
 offset_left = 697.0
@@ -75,11 +64,11 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D7"]
 position = Vector2(758, 378)
-shape = SubResource("RectangleShape2D_j20h5")
+shape = SubResource("RectangleShape2D_k3ao6")
 metadata/_edit_lock_ = true
 
 [node name="StaticBody2D5" type="StaticBody2D" parent="."]
-position = Vector2(-8, -143)
+position = Vector2(-145, -106)
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D5"]
 offset_left = 697.0
@@ -90,11 +79,11 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D5"]
 position = Vector2(758, 378)
-shape = SubResource("RectangleShape2D_j20h5")
+shape = SubResource("RectangleShape2D_k3ao6")
 metadata/_edit_lock_ = true
 
 [node name="StaticBody2D6" type="StaticBody2D" parent="."]
-position = Vector2(-494, 41)
+position = Vector2(-460, -122)
 
 [node name="ColorRect" type="ColorRect" parent="StaticBody2D6"]
 offset_left = 697.0
@@ -105,5 +94,20 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D6"]
 position = Vector2(758, 378)
-shape = SubResource("RectangleShape2D_j20h5")
+shape = SubResource("RectangleShape2D_k3ao6")
 metadata/_edit_lock_ = true
+
+[node name="Label" type="Label" parent="."]
+offset_right = 171.0
+offset_bottom = 80.0
+
+[node name="TentacleTest" parent="." instance=ExtResource("2_k3ao6")]
+points = PackedVector2Array(720, 344, 723, 190, 891, 199, 953, 338, 822, 432, 610, 375, 475, 348, 367, 311, 266, 167, 412, 27, 638, 56)
+width = 20.0
+maxDistance = 10.0
+numberOfPoints = 100
+collisionCirlcleResolution = 4
+regressionMaxIterations = 10
+regressionErrorDistSqr = 0.1
+
+[connection signal="Movement" from="TentacleTest" to="." method="_on_tentacle_test_movement"]

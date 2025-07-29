@@ -12,10 +12,14 @@ var anchor_position:Vector2
 
 @export var collision_circle_resolution:int = 10
 
-var tentacle_wave_offset:float = 0
+@export var max_angle:float = 0.2
 
 var goal_point:Vector2 = Vector2.ZERO
+var last_point_with_collisions:int = 0
 var space_state:PhysicsDirectSpaceState2D
+
+var debug_indx:int
+var debug_vect:Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -34,31 +38,97 @@ func _ready() -> void:
 
 func _draw() -> void:
 	if debug_display:
-		for point in points:
-			draw_circle(point, max_distance/5, Color.REBECCA_PURPLE)
+		for i in range(number_of_points):
+			var point = points[i]
+			draw_circle(point, max_distance/7, Color.REBECCA_PURPLE)
 			draw_circle(point, max_distance, Color.AZURE, false)
+			
+		
+		draw_circle(goal_point, 3, Color.RED)
+		draw_circle(points[last_point_with_collisions], max_distance * (number_of_points - last_point_with_collisions - 1), Color.DARK_GRAY, false)
 
-func distance_chain_forward_movement(delta:float) -> void:
-	space_state = get_world_2d().direct_space_state
-	# Move first point
-	#var temp_goal_point:Vector2 = points[-1] + (goal_point - points[-1]).normalized() * min(max_speed, points[-1].distance_to(goal_point))
-	points[-1] = movement_with_collisions(points[-1], goal_point)
+func set_movement(movement:Vector2, dt:float) -> void:
+	last_point_with_collisions = 0
 	
-	# Move other points
-	for i in range(points.size()-2, -1, -1):
-		var point_new_position:Vector2 = constraint_distance(points[i], points[i+1], max_distance)
-		points[i] = chain_movement_with_collisions(points[i], point_new_position, points[i+1], max_distance)
-
-func distance_chain_anchor_movement(delta:float) -> void:
-	points[0] = anchor_position
-	for i in range(1, points.size()):
-		var point_new_position:Vector2 = constraint_distance(points[i], points[i-1], max_distance)
-		if i != points.size()-1:
-			points[i] = chain_movement_with_collisions(points[i], point_new_position, points[i-1], max_distance)
-		else:
-			points[i] = movement_with_collisions(points[i], point_new_position)
+	for i in range(points.size() - 3, 0, -1):
+		var angle = (points[i+1] - points[i]).angle_to(points[i] - points[i-1])
+		if abs(angle) >= max_angle:
+			last_point_with_collisions = i
+			break
 	
-	calculate_and_store_normals()
+	
+	movement = movement.normalized() * dt * max_speed
+	var next_goal_point:Vector2 = points[-1] + movement
+	
+	var movCirc_radius:float = max_distance * (number_of_points - last_point_with_collisions - 1)
+	var movCirc_radius_sqr:float = movCirc_radius**2
+	var movCirc_center:Vector2 = points[last_point_with_collisions]
+	
+	
+	# Checking if there is no intersection with the circle
+	if movCirc_center.distance_squared_to(next_goal_point) <= movCirc_radius_sqr:
+		goal_point = next_goal_point
+		return
+	
+	# If there is intersection, get the intersection point
+	var pt1:Vector2 = points[-1] - movCirc_center
+	var pt2:Vector2 = next_goal_point - movCirc_center
+	var x_near_0:bool = abs(pt1.x - pt2.x) <= abs(pt1.y - pt2.y)
+	
+	var alpha:float; var beta:float; 
+	var a:float; var b:float; var c:float; 
+	var delta:float; var pt3_direction:float
+	
+	if x_near_0:
+		alpha = (pt2.x - pt1.x)/(pt2.y - pt1.y)
+		beta = (pt1.x*pt2.y - pt2.x*pt1.y)/(pt2.y - pt1.y)
+		pt3_direction = sign(pt2.y - pt1.y)
+	else:
+		alpha = (pt2.y - pt1.y)/(pt2.x - pt1.x)
+		beta = (pt2.x*pt1.y - pt1.x*pt2.y)/(pt2.x - pt1.x)
+		pt3_direction = sign(pt2.x - pt1.x)
+	
+	a = 1 + alpha**2
+	b = 2*alpha*beta
+	c = beta**2 - movCirc_radius_sqr
+	delta = b**2 - 4*a*c
+	
+	var v1:float = (-b + pt3_direction * sqrt(delta))/(2*a)
+	var v2:float = alpha*v1 + beta
+	var pt3:Vector2
+	
+	if x_near_0: pt3 = Vector2(v2, v1)
+	else: pt3 = Vector2(v1, v2)
+	
+	# Get the amount by which we have to move
+	var active_movement:Vector2 = pt3 - pt1
+	var v:float = min(dt * max_speed - active_movement.length(), 2*movCirc_radius)
+	var m1:Vector2; var m2:Vector2
+	
+	if x_near_0:
+		var mX1 = v*(-v*pt3.x + pt3.y*sqrt(4*movCirc_radius_sqr - v**2))/(2*movCirc_radius_sqr)
+		var mY1 = -mX1*pt3.x/pt3.y - v**2/(2*pt3.y)
+		m1 = Vector2(mX1, mY1)
+		
+		var mX2 = v*(-v*pt3.x - pt3.y*sqrt(4*movCirc_radius_sqr - v**2))/(2*movCirc_radius_sqr)
+		var mY2 = -mX2*pt3.x/pt3.y - v**2/(2*pt3.y)
+		m2 = Vector2(mX2, mY2)
+	
+	else:
+		var mY1 = v*(-v*pt3.y - pt3.x*sqrt(4*movCirc_radius_sqr - v**2))/(2*movCirc_radius_sqr)
+		var mX1 = -mY1*pt3.y/pt3.x - v**2/(2*pt3.x)
+		m1 = Vector2(mX1, mY1)
+		
+		var mY2 = v*(-v*pt3.y + pt3.x*sqrt(4*movCirc_radius_sqr - v**2))/(2*movCirc_radius_sqr)
+		var mX2 = -mY2*pt3.y/pt3.x - v**2/(2*pt3.x)
+		m2 = Vector2(mX2, mY2)
+		
+	if pt2.distance_squared_to(m1) < pt2.distance_squared_to(m2):
+		active_movement += m1
+	else:
+		active_movement += m2
+	
+	goal_point = points[-1] + active_movement
 
 func calculate_and_store_normals() -> void:
 	gradient = Gradient.new()
@@ -76,8 +146,27 @@ func calculate_and_store_normals() -> void:
 		var color = Color((normal.x + 1.0)/2, (normal.y + 1.0)/2, 0.0, 1.0)
 		gradient.add_point(float(i)/(points.size()-1), color)
 
+func distance_chain_forward_movement(delta:float) -> void:
+	#Initialize variables
+	space_state = get_world_2d().direct_space_state
+	
+	# Move first point
+	#var temp_goal_point:Vector2 = points[-1] + (goal_point - points[-1]).normalized() * min(max_speed * delta, points[-1].distance_to(goal_point))
+	points[-1] = movement_with_collisions(points[-1], goal_point)
+	
+	# Move other points
+	for i in range(points.size()-2, -1, -1):
+		var point_new_position:Vector2 = constraint_distance(points[i], points[i+1], max_distance)
+		points[i] = chain_movement_with_collisions(points[i], point_new_position, points[i+1], max_distance)
+
+func distance_chain_anchor_movement(delta:float) -> void:
+	points[0] = anchor_position
+	for i in range(1, points.size()):
+		var point_new_position:Vector2 = constraint_distance(points[i], points[i-1], max_distance)
+		points[i] = chain_movement_with_collisions(points[i], point_new_position, points[i-1], max_distance)
+
 func constraint_distance(point:Vector2, anchor:Vector2, distance:float) -> Vector2:
-	return point + (anchor - point).normalized() * max(0, anchor.distance_to(point) - distance)
+	return anchor + (point - anchor).normalized() * min(point.distance_to(anchor),distance)
 
 func movement_with_collisions(initial_position:Vector2, goal_position:Vector2) -> Vector2:
 	var initial_global_position = initial_position + global_position
@@ -89,9 +178,12 @@ func movement_with_collisions(initial_position:Vector2, goal_position:Vector2) -
 		return goal_position
 	
 	else:
-		 # Collision détectée, ajuster le déplacement
+		# Collision détectée, ajuster le déplacement
 		var collision_point = result.position
 		var collision_normal = result.normal
+		
+		if collision_normal == Vector2.ZERO: 
+			return goal_position
 		
 		# Trouver le mouvement projeté pour glisser le long de l'obstacle
 		var slide_movement = (goal_position - initial_position).slide(collision_normal)
@@ -119,7 +211,7 @@ func chain_movement_with_collisions(initial_position:Vector2, goal_position:Vect
 		
 		# Définition du raycast
 		var ray_querry = PhysicsRayQueryParameters2D.new()
-		ray_querry.exclude = [self]
+		#ray_querry.exclude = [self]
 		ray_querry.hit_from_inside = false
 		
 		# Définition des positions
@@ -159,33 +251,6 @@ func chain_movement_with_collisions(initial_position:Vector2, goal_position:Vect
 			return pos2
 		elif pos1:
 			return pos1
-		
-		# Ancienne méthode
-		"
-		# On prends le premier point d'intersection entre le raycast entre l'anchre et notre point
-		var anchor_global_position:Vector2 = anchor_position + global_position
-		var ray_querry = PhysicsRayQueryParameters2D.create(anchor_global_position, initial_global_position)
-		ray_querry.exclude = [self]
-		
-		result = space_state.intersect_ray(ray_querry)
-		if result.is_empty():
-			return goal_position
-		
-		
-		# On récupère la normale à la surface d'itersection et on calcule la tangente
-		var normal_angle:float = result.normal.angle_to(anchor_global_position - result.position)
-		var normal:Vector2 = result.normal * - anchor_global_position.distance_to(result.position) * cos(normal_angle)
-		var tangent:Vector2 = Vector2(result.normal.y, -result.normal.x) * sqrt(abs(normal.length_squared() - distance**2))
-		
-		# On compare les 2 positions possibles
-		var pos1:Vector2 = anchor_position + normal + tangent
-		var pos2:Vector2 = anchor_position + normal - tangent
-		
-		if initial_position.distance_squared_to(pos1) >= initial_position.distance_squared_to(pos2):
-			return pos2
-		else:
-			return pos1
-		"
 	
 	return initial_position
 

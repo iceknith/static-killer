@@ -1,9 +1,9 @@
 [gd_scene load_steps=10 format=3 uid="uid://cr6tokb1rig0d"]
 
-[ext_resource type="Script" uid="uid://b2rglbjaoxdbj" path="res://src/test/test_player.gd" id="1_1op1a"]
-[ext_resource type="PackedScene" uid="uid://bhcpfx70mpdjo" path="res://src/test/tentacle_test.tscn" id="1_5bwgy"]
+[ext_resource type="Script" uid="uid://b2rglbjaoxdbj" path="res://src/test/movementTests/test_player.gd" id="1_1op1a"]
+[ext_resource type="PackedScene" uid="uid://bhcpfx70mpdjo" path="res://src/test/movementTests/tentacle_test.tscn" id="1_5bwgy"]
 [ext_resource type="Texture2D" uid="uid://b0n1jxlfpenv" path="res://assets/images/test/Skull_test.png" id="1_n60f6"]
-[ext_resource type="Shader" uid="uid://dfpns7ib27p1x" path="res://src/test/tentacle_shader.gdshader" id="4_o4515"]
+[ext_resource type="Shader" uid="uid://dfpns7ib27p1x" path="res://src/test/movementTests/tentacle_shader.gdshader" id="4_o4515"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1op1a"]
 radius = 21.0
@@ -45,15 +45,11 @@ texture = ExtResource("1_n60f6")
 
 [node name="tentacle1" parent="." instance=ExtResource("1_5bwgy")]
 width_curve = SubResource("Curve_o4515")
-max_distance = 50.0
-number_of_points = 5
 max_speed = 300.0
 inverted = true
 debug_display = true
 
 [node name="tentacle2" parent="." instance=ExtResource("1_5bwgy")]
 material = SubResource("ShaderMaterial_o4515")
-max_distance = 50.0
-number_of_points = 5
 max_speed = 300.0
 debug_display = true

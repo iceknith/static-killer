@@ -1,0 +1,80 @@
+[gd_scene load_steps=14 format=3 uid="uid://db3adgy8vdfiv"]
+
+[ext_resource type="Script" uid="uid://dr2joobf2r3ni" path="res://src/player/Player.cs" id="1_mf2ua"]
+[ext_resource type="Texture2D" uid="uid://b0n1jxlfpenv" path="res://assets/images/test/Skull_test.png" id="2_244u8"]
+[ext_resource type="PackedScene" uid="uid://ddgfnfaihoa6h" path="res://src/player/tentacles/playerTentacle.tscn" id="3_5f2sf"]
+[ext_resource type="Shader" uid="uid://bfv8kfg26y3j8" path="res://src/player/tentacles/tentacleShader.gdshader" id="4_244u8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_jiejy"]
+radius = 12.0
+height = 32.0
+
+[sub_resource type="Curve" id="Curve_244u8"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.255, 1), 0.0, 0.0, 0, 0, Vector2(0.6175, 0.856112), 0.0, 0.0, 0, 0, Vector2(0.8775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="CurveTexture" id="CurveTexture_5f2sf"]
+curve = SubResource("Curve_244u8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jiejy"]
+shader = ExtResource("4_244u8")
+shader_parameter/outline_size = 0.25
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/inverted = false
+shader_parameter/speed = 2.0
+shader_parameter/amplitude_curve_texture = SubResource("CurveTexture_5f2sf")
+shader_parameter/amplitude = 2.0
+shader_parameter/period = 10.0
+
+[sub_resource type="Curve" id="Curve_5f2sf"]
+_data = [Vector2(0, 1), -0.820326, -0.0463411, 0, 0, Vector2(0.3275, 0.699711), 0.0, 0.0, 0, 0, Vector2(0.6625, 0.255534), 0.0, 0.0, 0, 0, Vector2(1, 0.011236), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_o822w"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.255, 1), 0.0, 0.0, 0, 0, Vector2(0.6175, 0.856112), 0.0, 0.0, 0, 0, Vector2(0.8775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="CurveTexture" id="CurveTexture_x42xx"]
+curve = SubResource("Curve_o822w")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_l271a"]
+shader = ExtResource("4_244u8")
+shader_parameter/outline_size = 0.25
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/inverted = false
+shader_parameter/speed = 2.0
+shader_parameter/amplitude_curve_texture = SubResource("CurveTexture_x42xx")
+shader_parameter/amplitude = 2.0
+shader_parameter/period = 10.0
+
+[sub_resource type="Curve" id="Curve_jiejy"]
+_data = [Vector2(0, 1), -0.820326, -0.0463411, 0, 0, Vector2(0.3275, 0.699711), 0.0, 0.0, 0, 0, Vector2(0.6625, 0.255534), 0.0, 0.0, 0, 0, Vector2(1, 0.011236), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[node name="Player" type="Area2D"]
+script = ExtResource("1_mf2ua")
+maxSpeed = 100.0
+tentaclesDist = 10.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_244u8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_jiejy")
+
+[node name="Tentacle1" parent="." instance=ExtResource("3_5f2sf")]
+material = SubResource("ShaderMaterial_jiejy")
+points = PackedVector2Array(-94, 21, -88.1331, 19.5333, -85.4529, 18.8632, -81.2748, 17.8187, -74.2325, 16.0581, -67.7946, 14.4486, -61.0413, 12.7603, -55.6282, 11.4071, -49.3217, 9.83043, -41.2809, 7.82022, -36.2094, 6.55235, -26, 4, -21, 3, -17, 6)
+width = 7.0
+width_curve = SubResource("Curve_5f2sf")
+maxDistance = 4.0
+numberOfPoints = 25
+
+[node name="Tentacle2" parent="." instance=ExtResource("3_5f2sf")]
+material = SubResource("ShaderMaterial_l271a")
+points = PackedVector2Array(54, 46)
+width = 7.0
+width_curve = SubResource("Curve_jiejy")
+maxDistance = 4.0
+numberOfPoints = 25

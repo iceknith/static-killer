@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://boug52eyg2ayi"]
+
+[ext_resource type="Script" uid="uid://bxq4ngs8t5ftq" path="res://tests/test_movement_getter.gd" id="1_5gpy7"]
+
+[node name="test-movement-getter" type="Node2D"]
+script = ExtResource("1_5gpy7")
+origin = Vector2(500, 453.58)
+goal = Vector2(495.73, 193.715)
+speed = 200.0

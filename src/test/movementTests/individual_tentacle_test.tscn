@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bleher4vgfj5t"]
 
-[ext_resource type="Shader" uid="uid://bm1bx6bl6gek0" path="res://src/test/outline.gdshader" id="1_7jqnf"]
-[ext_resource type="Script" uid="uid://dj3a65ule8jr3" path="res://src/test/individual_tentacle_test.gd" id="2_w7ocn"]
+[ext_resource type="Shader" uid="uid://bm1bx6bl6gek0" path="res://src/test/movementTests/outline.gdshader" id="1_7jqnf"]
+[ext_resource type="Script" uid="uid://dj3a65ule8jr3" path="res://src/test/movementTests/individual_tentacle_test.gd" id="2_w7ocn"]
 [ext_resource type="Texture2D" uid="uid://b0n1jxlfpenv" path="res://assets/images/test/Skull_test.png" id="3_qlatq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6lo51"]

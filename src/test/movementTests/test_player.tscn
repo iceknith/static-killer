@@ -47,9 +47,7 @@ texture = ExtResource("1_n60f6")
 width_curve = SubResource("Curve_o4515")
 max_speed = 300.0
 inverted = true
-debug_display = true
 
 [node name="tentacle2" parent="." instance=ExtResource("1_5bwgy")]
 material = SubResource("ShaderMaterial_o4515")
 max_speed = 300.0
-debug_display = true
